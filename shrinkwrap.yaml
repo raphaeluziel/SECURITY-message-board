@@ -1646,5 +1646,5 @@ specifiers:
   helmet: ^3.15.1
   mocha: ^5.2.0
   mongodb: ^3.1.11
-  mongoose: ^5.4.10
+  mongoose: ^5.4.13
   zombie: ^6.1.4

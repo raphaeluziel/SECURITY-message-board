@@ -22,10 +22,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(helmet({
   frameguard: { action: 'same-origin' },
-  contentSecurityPolicy: { directives: { defaultSrc: ["'self'"], styleSrc: ["'style.com'"] } },
   referrerPolicy: { policy: 'same-origin' },
   dnsPrefetchControl: true
 }));
+
 
 
 
