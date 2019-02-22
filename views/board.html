@@ -32,9 +32,9 @@
             crossorigin="anonymous"></script>
     <script>
       $(function() {
-        var currentBoard = window.location.pathname.slice(3);
-        console.log("currentBoard", currentBoard);
-        var url = "https://security-message-board.glitch.me/api/threads/MindGames";    //CHANGED
+        var currentBoard = window.location.pathname.slice(3, -1);
+        console.log("currentBoard = ", currentBoard);
+        var url = "https://security-message-board.glitch.me/api/threads/" + currentBoard;    //CHANGED
         $('#boardTitle').text('Welcome to '+ currentBoard)    //CHANGED
         $.ajax({
           type: "GET",
