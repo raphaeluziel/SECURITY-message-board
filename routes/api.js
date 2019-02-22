@@ -34,7 +34,7 @@ module.exports = function (app) {
   app.route('/api/threads/:board')
   
   .get(function(req, res){
-    var query = threadModel.find({board: req.params.board})
+    var query = threadModel.find({board: req.params.board}).sort({bumped_on: 'descending'}).select('-delete_password').limit(10);
     
     query.exec(function(err, data){
       if(err) {console.log('error executing');}
