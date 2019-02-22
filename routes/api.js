@@ -44,18 +44,19 @@ module.exports = function (app) {
   })
   
   .post(function(req, res){
+    console.log("PARAMS: ", req.params.board);
     var newThread = new threadModel({
-      board: req.body.board,
+      board: req.params.board,
       text: req.body.text,
       delete_password: req.body.delete_password,
       created_on: new Date(),
       bumped_on: new Date()
     });
     newThread.save(function(err, doc){
-      if (err) { res.send('error saving new thread to database') }
+      if (err) { console.log(err); res.send('error saving new thread to database') }
       else{ 
         //res.json({_id: doc._id, text: doc.text, created_on: doc.created_on, bumped_on: doc.bumped_on, reported: false, delete_password: doc.delete_password, replies: doc.replies});
-        res.redirect('/b/' + req.body.board); 
+        res.redirect('/b/' + req.params.board + '/'); 
       }
     });
   })
