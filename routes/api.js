@@ -65,8 +65,9 @@ module.exports = function (app) {
       if (!req.body.delete_password) { res.send('incorrect password'); }
       else{
         threadModel.findOneAndDelete({delete_password: req.body.delete_password}, function(err, data){
-          if (err) { res.send('could not delete'); }
-          res.send('success');
+          if (err) { console.log(err); return res.send('incorrect password'); }
+          if (!data) { return res.send('incorrect password'); }
+          return res.send('success');
         }); 
       }
     });
