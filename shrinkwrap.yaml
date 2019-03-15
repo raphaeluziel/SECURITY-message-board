@@ -4,10 +4,10 @@ dependencies:
   chai-http: 4.2.1
   cors: 2.8.5
   express: 4.16.4
-  helmet: 3.15.1
+  helmet: 3.16.0
   mocha: 5.2.0
   mongodb: 3.1.13
-  mongoose: 5.4.14
+  mongoose: 5.4.18
   zombie: 6.1.4
 packages:
   /@types/chai/4.1.7:
@@ -187,6 +187,12 @@ packages:
       node: '>=0.6.19'
     resolution:
       integrity: sha512-9Aeai9TacfNtWXOYarkFJRW2CWo+dRon+fuLZYJmvLV3+MiUp0bEI6IAZfXEIg7/Pl/7IWlLaDnhzTsD81etQA==
+  /bson/1.1.1:
+    dev: false
+    engines:
+      node: '>=0.6.19'
+    resolution:
+      integrity: sha512-jCGVYLoYMHDkOsbwJZBCqwMHyH4c+wzgI9hG7Z6SZJRXWr+x58pdIbm2i9a/jFGCkRJqRUr8eoI7lDWa0hTkxg==
   /bytes/3.0.0:
     dev: false
     engines:
@@ -674,7 +680,7 @@ packages:
     dev: false
     resolution:
       integrity: sha512-sCHwywg4daQ2mY0YYwXSZRsgcCeerUwxMwNixGA7aMLkVmPTYBl7gJoZDHOZyXkqPrtuDT3s2B1A+RLI7WxSdQ==
-  /helmet/3.15.1:
+  /helmet/3.16.0:
     dependencies:
       depd: 2.0.0
       dns-prefetch-control: 0.1.0
@@ -686,16 +692,16 @@ packages:
       helmet-csp: 2.7.1
       hide-powered-by: 1.0.0
       hpkp: 2.0.0
-      hsts: 2.1.0
-      ienoopen: 1.0.0
+      hsts: 2.2.0
+      ienoopen: 1.1.0
       nocache: 2.0.0
       referrer-policy: 1.1.0
       x-xss-protection: 1.1.0
     dev: false
     engines:
-      node: '>= 0.10.0'
+      node: '>=4.0.0'
     resolution:
-      integrity: sha512-hgoNe/sjKlKNvJ3g9Gz149H14BjMMWOCmW/DTXl7IfyKGtIK37GePwZrHNfr4aPXdKVyXcTj26RgRFbPKDy9lw==
+      integrity: sha512-rsTKRogc5OYGlvSHuq5QsmOsOzF6uDoMqpfh+Np8r23+QxDq+SUx90Rf8HyIKQVl7H6NswZEwfcykinbAeZ6UQ==
   /hide-powered-by/1.0.0:
     dev: false
     resolution:
@@ -704,10 +710,14 @@ packages:
     dev: false
     resolution:
       integrity: sha1-EOFCJk52IVpdMMROxD3mTe5tFnI=
-  /hsts/2.1.0:
+  /hsts/2.2.0:
+    dependencies:
+      depd: 2.0.0
     dev: false
+    engines:
+      node: '>=4.0.0'
     resolution:
-      integrity: sha512-zXhh/DqgrTXJ7erTN6Fh5k/xjMhDGXCqdYN3wvxUvGUQvnxcFfUd8E+6vLg/nk3ss1TYMb+DhRl25fYABioTvA==
+      integrity: sha512-ToaTnQ2TbJkochoVcdXYm4HOCliNozlviNsg+X2XQLQvZNI/kCHR9rZxVYpJB3UPcHz80PgxRyWQ7PdU1r+VBQ==
   /html-encoding-sniffer/1.0.2:
     dependencies:
       whatwg-encoding: 1.0.5
@@ -752,10 +762,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==
-  /ienoopen/1.0.0:
+  /ienoopen/1.1.0:
     dev: false
+    engines:
+      node: '>=4.0.0'
     resolution:
-      integrity: sha1-NGpCj0dKrI9QzzeE6i0PFvYr2ms=
+      integrity: sha512-MFs36e/ca6ohEKtinTJ5VvAJ6oDRAYFdYXweUnGY9L9vcoqFOU4n2ZhmJ0C4z/cwGZ3YIQRSB3XZ1+ghZkY5NQ==
   /inflight/1.0.6:
     dependencies:
       once: 1.4.0
@@ -997,10 +1009,10 @@ packages:
       mongoose: '*'
     resolution:
       integrity: sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
-  /mongoose/5.4.14:
+  /mongoose/5.4.18:
     dependencies:
       async: 2.6.1
-      bson: 1.1.0
+      bson: 1.1.1
       kareem: 2.3.0
       mongodb: 3.1.13
       mongodb-core: 3.1.11
@@ -1015,7 +1027,7 @@ packages:
     engines:
       node: '>=4.0.0'
     resolution:
-      integrity: sha512-lAISH4xdx0/o0bVWPB4bxApP3bA1b08oHPEjTBq3/mIr4R494hepDJJowByBgpGYf8tj/oe6VkFCx8wbRcOciA==
+      integrity: sha512-yiSd/1OYYfK9EuH6NFO/NnTD4AZPIpRY1i58xUssgCGsYDX3qEYcdgFeknB5OArMB1Ny3wwMW8xiip2I5pgszw==
   /mpath/0.5.1:
     dev: false
     engines:
@@ -1643,8 +1655,8 @@ specifiers:
   chai-http: ^4.2.1
   cors: ^2.8.5
   express: ^4.16.4
-  helmet: ^3.15.1
+  helmet: ^3.16.0
   mocha: ^5.2.0
   mongodb: ^3.1.11
-  mongoose: ^5.4.13
+  mongoose: ^5.4.18
   zombie: ^6.1.4

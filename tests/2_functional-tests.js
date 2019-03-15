@@ -19,10 +19,26 @@ suite('Functional Tests', function() {
     
     suite('POST', function() {
       
+      test('thread exists', function(done) {
+        chai.request(server)
+        .post('/api/threads/test')
+        .send({
+          text: 'chai testing',
+          delete_password: 'passwd'
+        })
+        .end(function(err, res){
+          console.log("RES.BODY", res.body);
+          assert.equal(res.status, 200);
+          assert.property(res.body, '_id');
+          assert.equal(res.text, 'text');
+          done();
+        });
+      });
+      
     });
     
     suite('GET', function() {
-      
+
     });
     
     suite('DELETE', function() {

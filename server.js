@@ -32,7 +32,6 @@ app.use(helmet({
 //Sample front-end
 app.route('/b/:board/')
   .get(function (req, res) {
-    console.log("cynthia", req.params);
     res.sendFile(process.cwd() + '/views/board.html');
   });
 app.route('/b/:board/:threadid')

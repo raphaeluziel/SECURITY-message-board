@@ -24,10 +24,10 @@
             crossorigin="anonymous"></script>
     <script>
       $(function() {
-        var currentURL = window.location.pathname.slice(3);
-        currentURL = currentURL.split('/');
+        var currentURL = window.location.pathname.slice(3); console.log("currentURLA = ", currentURL);
+        currentURL = currentURL.split('/'); console.log("currentURLB = ", currentURL);
         
-        var url = "/api/replies/"+currentURL[0];
+        var url = "/api/replies/"+currentURL[0]; console.log("url = ", url);
         $('#threadTitle').text(window.location.pathname);
         $.ajax({
           type: "GET",

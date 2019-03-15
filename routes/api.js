@@ -15,7 +15,16 @@ var mongoose = require('mongoose');
 
 mongoose.connect(process.env.DB, { useNewUrlParser: true });
 
+mongoose.set('useFindAndModify', false);
+
 var Schema = mongoose.Schema;
+
+var replySchema = new Schema({
+    text: {type: String, required: true},
+    delete_password: {type: String, required: true},
+    created_on: Date,
+    reported: {type: Boolean, default: false }
+});
 
 var threadSchema = new Schema({
   board: {type: String, required: true},
@@ -23,8 +32,9 @@ var threadSchema = new Schema({
   delete_password: {type: String, required: true},
   created_on: Date,
   bumped_on: Date,
-  reported: Boolean,
-  replies: [String]
+  reported: {type: Boolean, default: false },
+  replies: [replySchema],
+  replycount: {type: Number, default: 0}
 });
 
 var threadModel = mongoose.model('threadModel', threadSchema);
@@ -34,9 +44,10 @@ module.exports = function (app) {
   app.route('/api/threads/:board')
   
   .get(function(req, res){
-    var query = threadModel.find({board: req.params.board}).sort({bumped_on: 'descending'}).select('-delete_password').limit(10);
+    var query = threadModel.find({board: req.params.board}).sort({bumped_on: 'descending'}).select('-delete_password').select('-reported').limit(10);
     
     query.exec(function(err, data){
+      
       if(err) {console.log('error executing');}
       else { return res.send(data); }
       });  
@@ -44,7 +55,6 @@ module.exports = function (app) {
   })
   
   .post(function(req, res){
-    console.log("PARAMS: ", req.params.board);
     var newThread = new threadModel({
       board: req.params.board,
       text: req.body.text,
@@ -55,42 +65,111 @@ module.exports = function (app) {
     newThread.save(function(err, doc){
       if (err) { console.log(err); res.send('error saving new thread to database') }
       else{ 
-        //res.json({_id: doc._id, text: doc.text, created_on: doc.created_on, bumped_on: doc.bumped_on, reported: false, delete_password: doc.delete_password, replies: doc.replies});
         res.redirect('/b/' + req.params.board + '/'); 
       }
     });
   })
   
-  .delete(function (req, res){    
-      if (!req.body.delete_password) { res.send('incorrect password'); }
+  .put(function(req, res){
+    threadModel.findByIdAndUpdate(req.body.report_id, {'reported': true}, function(err, data){
+      if(err) {return console.log(err);}
+      //data.reported = true;
+      return res.send('reported');
+    });
+  })
+  
+  .delete(function (req, res){
+    
+    threadModel.findById(req.body.thread_id, function(err, doc){
+      console.log("1", doc);
+      if(req.body.delete_password === doc.delete_password) {
+        threadModel.deleteOne({_id: req.body.thread_id}, function(err){console.log(err);});
+        return res.send('success');           
+      } 
       else{
-        threadModel.findOneAndDelete({delete_password: req.body.delete_password}, function(err, data){
-          if (err) { console.log(err); return res.send('incorrect password'); }
-          if (!data) { return res.send('incorrect password'); }
-          return res.send('success');
-        }); 
+        return res.send('incorrect password');
       }
     });
+    
+  });
 
   
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
   app.route('/api/replies/:board')
+  
+  .get(function(req, res){
+    
+    var query = threadModel.findById(req.query.thread_id).select('-delete_password').select('-reported');
+    
+    query.exec(function(err, data){
+      
+      var nestQuery = threadModel.findOne({_id: data._id}, {'replies.delete_password': 0, 'replies.reported': 0}).select('-delete_password').select('-reported');
+      
+      nestQuery.exec(function(err, doc){
+        if (err) {console.log(err); return res.send('error in finding subdocument'); }
+        else{ res.send(doc); }
+      });
+    });  
+    
+  })
     
   .post(function(req, res){
-    
-    threadModel.findByIdAndUpdate(req.body._id, {replies: 'HELL HELL HELL'}, function(err, doc){
-      
-      //doc.replies.push('heaven');
-      
+
+    threadModel.findOneAndUpdate({_id: req.body.thread_id}, { $push: { replies: {text: req.body.text, delete_password: req.body.delete_password, created_on: new Date()} } },  function(err, doc){
+
       if (err) { res.send('error saving reply to database'); }
-      else{ 
-        //res.send(doc);
-        //res.json({_id: doc._id, text: doc.text, created_on: doc.created_on, bumped_on: doc.bumped_on, reported: false, delete_password: doc.delete_password, replies: 'poplice'});
-        //res.redirect('/b/' + req.body.board + '/' + req.body._id); 
+      else{
+        doc.replycount = doc.replies.length + 1; 
+        doc.save(function(err, data){console.log("UPDATED REPLYCOUNT");});
+        res.redirect('/b/' + req.params.board + '/' + doc._id); 
       }
+
     });
     
+  })
+  
+  .put(function(req, res){
+    
+    threadModel.findOneAndUpdate({_id: req.body.thread_id, 'replies._id': req.body.reply_id}, { $set: { 'replies.$.reported': true } }, function(err, data){
+      res.send('reported');
+    });
+  
+  })
+  
+  .delete(function (req, res){
+    /*
+    Collection.update({ _id: parentDocumentId }, { $pull: { subDocument: { _id: SubDocumentId } } });
+    
+    */
+    
+    
+    
+    
+    //threadModel.update({ _id: req.body.thread_id }, { $pull: { replies: { _id: req.body.reply_id } } } );
+    
+    console.log("RQ", req.body.delete_password);
+    
+    threadModel.findById(req.body.thread_id, function(err, data){
+      console.log("data", data.replies.id(req.body.reply_id).delete_password);
+      if (req.body.delete_password === data.replies.id(req.body.reply_id).delete_password) {
+          //threadModel.update({ _id: req.body.thread_id }, { $pull: { replies: { _id: req.body.reply_id } } } );
+          //data.replies.id(req.body.reply_id).remove();
+          data.replies.id(req.body.reply_id).text = '[deleted]';
+          data.save(function(err, doc){console.log("DONE!!!!!");})
+        res.send('success')
+        console.log("good");
+      return;}
+      else{res.send('incorrect password');}
+     
+    });
+    
+    /*
+    threadModel.updateOne({_id: req.body.thread_id}, {$pull:{replies:{_id: req.body.reply_id}}}, function(err, data){
+      res.send('success');
+      console.log("GEIE");
+    });
+    */
     
     
   });
